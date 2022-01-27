@@ -17,3 +17,13 @@ numpy.save+numpy.load == fast_numpy_save+fast_numpy_load: True
 ```
 
 It cannot save and load complex internal structures as-is, but it could probably be improved to handle special cases as well.
+
+The saved bytes object is formatted like this:
+```
+endianness: 1 byte, value can be < > |
+type: 1 byte, value can be b i f c
+type size: 1 byte, value can be 1 2 4 8 16
+number of dimensions: 1 byte, value can be 0-255
+shape: 4 bytes per dimension
+raw samples data
+```
