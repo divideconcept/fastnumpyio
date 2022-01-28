@@ -3,16 +3,26 @@ Fast Numpy I/O : Fast replacement for numpy.load and numpy.save
 
 numpy.load and numpy.save is not optimal speed wise, specially if your arrays don't have complex internal structures.
 
-fastnumpio provides a x4 speedup over numpy.load, and a x8000 speedup over numpy.save.
+fastnumpio provides significant speedup over numpy.load and numpy.save.
 It's designed to save and load a bytes object (as opposed to a file-like object with numpy.save and numpy.load).
 
-Running fastnumpyio.py shows the following result on Windows 11, Python 3.9.5, Numpy 1.22.0, and an	Intel Core i7-9750H:
+Running fastnumpyio.py shows the following results:
 
+Windows 11, Python 3.9.5, Numpy 1.22.0, Intel Core i7-9750H, float32 array with shape (3,64,64):
 ```
 numpy.save: 0:00:01.809470
 fast_numpy_save: 0:00:00.413202
 numpy.load: 0:00:17.921214
 fast_numpy_load: 0:00:00.002260
+numpy.save+numpy.load == fast_numpy_save+fast_numpy_load: True
+```
+
+Ubuntu 20.04, Python 3.9.7, Numpy 1.21.4, Intel Core i7-9750H, float32 array with shape (3,64,64):
+```
+numpy.save: 0:00:01.887152
+fast_numpy_save: 0:00:00.745052
+numpy.load: 0:00:16.368871
+fast_numpy_load: 0:00:00.381135
 numpy.save+numpy.load == fast_numpy_save+fast_numpy_load: True
 ```
 
