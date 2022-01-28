@@ -3,11 +3,12 @@ import struct
 
 def fast_numpy_save(array):
     size=len(array.shape)
-    return bytes(array.dtype.str,'utf-8')+struct.pack(f'<B{size}I',size,*array.shape)+array.tobytes()
+    return bytes(array.dtype.byteorder.replace('=','<' if sys.byteorder == 'little' else '>')+array.dtype.kind,'utf-8')+array.dtype.itemsize.to_bytes(1,byteorder='little')+struct.pack(f'<B{size}I',size,*array.shape)+array.tobytes()
 
 def fast_numpy_load(data):
-    dtype = str(struct.unpack_from('<3s', data, 0)[0],'utf-8')
-    size = struct.unpack_from('<B', data, 3)[0]
+    dtype = str(data[:2],'utf-8')
+    dtype += str(data[2])
+    size = data[3]
     shape = struct.unpack_from(f'<{size}I', data, 4)
     return np.ndarray(shape, dtype=dtype, buffer=data[4+size*4:])
 
