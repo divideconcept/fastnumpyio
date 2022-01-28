@@ -10,10 +10,10 @@ Running fastnumpyio.py (saving and loading 100k float32 array with shape 3,64,64
 
 Windows 11, Python 3.9.5, Numpy 1.22.0, Intel Core i7-9750H:
 ```
-numpy.save: 0:00:01.809470
-fast_numpy_save: 0:00:00.413202
-numpy.load: 0:00:17.921214
-fast_numpy_load: 0:00:00.002260
+numpy.save: 0:00:01.656569
+fast_numpy_save: 0:00:00.398236
+numpy.load: 0:00:16.281941
+fast_numpy_load: 0:00:00.308100
 numpy.save+numpy.load == fast_numpy_save+fast_numpy_load: True
 ```
 
@@ -34,6 +34,8 @@ numpy.load: 0:00:11.303569
 fast_numpy_load: 0:00:00.318216
 numpy.save+numpy.load == fast_numpy_save+fast_numpy_load: True
 ```
+
+With larger arrays (3x512x512), fastnumpyio is still slightly faster for save and 2 times faster for load.
 
 It cannot save and load complex internal structures as-is, but it could probably be improved to handle special cases as well.
 
