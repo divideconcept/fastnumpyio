@@ -8,7 +8,7 @@ It's designed to save and load a bytes object (as opposed to a file-like object 
 
 Running fastnumpyio.py shows the following results:
 
-Windows 11, Python 3.9.5, Numpy 1.22.0, Intel Core i7-9750H, float32 array with shape (3,64,64):
+Windows 11, Python 3.9.5, Numpy 1.22.0, Intel Core i7-9750H, 100k float32 array with shape (3,64,64):
 ```
 numpy.save: 0:00:01.809470
 fast_numpy_save: 0:00:00.413202
@@ -17,7 +17,7 @@ fast_numpy_load: 0:00:00.002260
 numpy.save+numpy.load == fast_numpy_save+fast_numpy_load: True
 ```
 
-Ubuntu 20.04, Python 3.9.7, Numpy 1.21.4, Intel Core i7-9750H, float32 array with shape (3,64,64):
+Ubuntu 20.04, Python 3.9.7, Numpy 1.21.4, Intel Core i7-9750H, 100k float32 array with shape (3,64,64):
 ```
 numpy.save: 0:00:01.887152
 fast_numpy_save: 0:00:00.745052
