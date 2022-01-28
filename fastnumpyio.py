@@ -37,7 +37,7 @@ if __name__ == "__main__":
     print("numpy.load:",timedelta(seconds=timer()-start))
 
     start = timer()
-    for i in range(num):
+    for i in range(iterations):
         testarray_fast_numpy_save=fast_numpy_load(fast_numpy_save_data)
     print("fast_numpy_load:",timedelta(seconds=timer()-start))
 
