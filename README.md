@@ -6,7 +6,7 @@ numpy.load and numpy.save is not optimal speed wise, specially if your arrays do
 fastnumpio provides significant speedup over numpy.load and numpy.save.
 It's designed to save and load a bytes object (as opposed to a file-like object with numpy.save and numpy.load).
 
-Running fastnumpyio.py (saving and loading 100k float32 array with shape 3,64,64) shows the following results:
+Running fastnumpyio.py (saving and loading 100k float32 array with shape 3x64x64) shows the following results:
 
 Windows 11, Python 3.9.5, Numpy 1.22.0, Intel Core i7-9750H:
 ```
