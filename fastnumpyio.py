@@ -1,24 +1,53 @@
 import sys
 import numpy as np
+import numpy.lib.format
 import struct
 
-def fast_numpy_save(array):
+def save(file, array):
+    magic_string=b"\x93NUMPY\x01\x00"
+    header=bytes(("{'descr': '"+array.dtype.descr[0][1]+"', 'fortran_order': False, 'shape': "+str(array.shape)+", }").ljust(128-len(magic_string)-3)+"\n",'utf-8')
+    if type(file) == str:
+        file=open(file,"wb")
+    file.seek(0)
+    file.write(magic_string)
+    file.write(len(header).to_bytes(2,'little'))
+    file.write(header)
+    file.write(array.tobytes())
+
+def pack(array):
     size=len(array.shape)
     return bytes(array.dtype.byteorder.replace('=','<' if sys.byteorder == 'little' else '>')+array.dtype.kind,'utf-8')+array.dtype.itemsize.to_bytes(1,byteorder='little')+struct.pack(f'<B{size}I',size,*array.shape)+array.tobytes()
 
-def fast_numpy_load(data):
+def load(file):
+    if type(file) == str:
+        file=open(file,"rb")
+    file.seek(0)
+    header = file.read(128)
+    descr = str(header[19:25], 'utf-8').replace("'","").replace(" ","")
+    shape = tuple(int(num) for num in str(header[60:120], 'utf-8').replace(', }', '').replace('(', '').replace(')', '').split(','))
+    datasize = numpy.lib.format.descr_to_dtype(descr).itemsize
+    for dimension in shape:
+        datasize *= dimension
+    return np.ndarray(shape, dtype=descr, buffer=file.read(datasize))
+
+def unpack(data):
     dtype = str(data[:2],'utf-8')
     dtype += str(data[2])
     size = data[3]
     shape = struct.unpack_from(f'<{size}I', data, 4)
-    return np.ndarray(shape, dtype=dtype, buffer=data[4+size*4:])
+    datasize=data[2]
+    for dimension in shape:
+        datasize *= dimension
+    return np.ndarray(shape, dtype=dtype, buffer=data[4+size*4:4+size*4+datasize])
+
+
 
 if __name__ == "__main__":
     import io
     from timeit import default_timer as timer
     from datetime import timedelta
     iterations=100000
-    testarray=np.float32(np.random.rand(3,64,64))
+    testarray=np.random.rand(3,64,64).astype('float32')
 
     start = timer()
     for i in range(iterations):
@@ -29,18 +58,32 @@ if __name__ == "__main__":
 
     start = timer()
     for i in range(iterations):
-        fast_numpy_save_data=fast_numpy_save(testarray)
-    print("fast_numpy_save:",timedelta(seconds=timer()-start))
+        buffer = io.BytesIO()
+        save(buffer, testarray)
+        fastnumpyio_save_data = buffer.getvalue()
+    print("fastnumpyio.save:",timedelta(seconds=timer()-start))
+
+    start = timer()
+    for i in range(iterations):
+        fastnumpyio_pack_data = pack(testarray)
+    print("fastnumpyio.pack:", timedelta(seconds=timer() - start))
 
     start = timer()
     for i in range(iterations):
         buffer = io.BytesIO(numpy_save_data)
-        testarray_numpy_save=np.load(buffer)
+        test_numpy_save=np.load(buffer)
     print("numpy.load:",timedelta(seconds=timer()-start))
 
     start = timer()
     for i in range(iterations):
-        testarray_fast_numpy_save=fast_numpy_load(fast_numpy_save_data)
-    print("fast_numpy_load:",timedelta(seconds=timer()-start))
+        buffer = io.BytesIO(fastnumpyio_save_data)
+        test_fastnumpyio_save=load(buffer)
+    print("fastnumpyio.load:",timedelta(seconds=timer()-start))
 
-    print("numpy.save+numpy.load == fast_numpy_save+fast_numpy_load:", np.array_equal(testarray_numpy_save,testarray_fast_numpy_save))
+    start = timer()
+    for i in range(iterations):
+        test_fastnumpyio_pack=unpack(fastnumpyio_pack_data)
+    print("fastnumpyio.unpack:",timedelta(seconds=timer()-start))
+
+    print("numpy.save+numpy.load == fastnumpyio.save+fastnumpyio.load:", np.array_equal(test_numpy_save,test_fastnumpyio_save))
+    print("numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack:", np.array_equal(test_numpy_save, test_fastnumpyio_pack))
