@@ -9,26 +9,26 @@ fastnumpyio.pack/fastnumpyio.unpack (saving/loading bytes objects) is even faste
 
 Running fastnumpyio.py (saving and loading 100k float32 array with shape 3x64x64) shows the following results:
 
-Windows 11, Python 3.9.5, Numpy 1.23.3, Intel Core i7-12700K:
+Windows 11, Python 3.9.12 x64, Numpy 1.24.0, Intel Core i7-12700K:
 ```
-numpy.save: 0:00:00.813492
-fastnumpyio.save: 0:00:00.334398
-fastnumpyio.pack: 0:00:00.316542
-numpy.load: 0:00:07.910804
-fastnumpyio.load: 0:00:00.306737
-fastnumpyio.unpack: 0:00:00.189628
+numpy.save: 0:00:00.786250
+fastnumpyio.save: 0:00:00.329080
+fastnumpyio.pack: 0:00:00.262129
+numpy.load: 0:00:09.689329
+fastnumpyio.load: 0:00:00.341074
+fastnumpyio.unpack: 0:00:00.208267
 numpy.save+numpy.load == fastnumpyio.save+fastnumpyio.load: True
 numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack: True
 ```
 
-macOS 12.5, Python 3.9.5, Numpy 1.21.5, Apple M1:
+macOS 12.5, Python 3.9.15 arm64, Numpy 1.24.0, Apple M1:
 ```
-numpy.save: 0:00:00.789568
-fastnumpyio.save: 0:00:00.361045
-fastnumpyio.pack: 0:00:00.300050
-numpy.load: 0:00:07.271897
-fastnumpyio.load: 0:00:00.289059
-fastnumpyio.unpack: 0:00:00.168710
+numpy.save: 0:00:00.831839
+fastnumpyio.save: 0:00:00.389113
+fastnumpyio.pack: 0:00:00.298685
+numpy.load: 0:00:07.552911
+fastnumpyio.load: 0:00:00.301430
+fastnumpyio.unpack: 0:00:00.179266
 numpy.save+numpy.load == fastnumpyio.save+fastnumpyio.load: True
 numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack: True
 ```
