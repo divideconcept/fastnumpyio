@@ -4,13 +4,11 @@ import numpy.lib.format
 import struct
 
 def save(file, array):
-    magic_string=b"\x93NUMPY\x01\x00"
-    header=bytes(("{'descr': '"+array.dtype.descr[0][1]+"', 'fortran_order': False, 'shape': "+str(array.shape)+", }").ljust(128-len(magic_string)-3)+"\n",'utf-8')
+    magic_string=b"\x93NUMPY\x01\x00v\x00"
+    header=bytes(("{'descr': '"+array.dtype.descr[0][1]+"', 'fortran_order': False, 'shape': "+str(array.shape)+", }").ljust(127-len(magic_string))+"\n",'utf-8')
     if type(file) == str:
         file=open(file,"wb")
-    file.seek(0)
     file.write(magic_string)
-    file.write(len(header).to_bytes(2,'little'))
     file.write(header)
     file.write(array.tobytes())
 
