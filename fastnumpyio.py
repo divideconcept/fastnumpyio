@@ -10,11 +10,11 @@ def save(file, array):
         file=open(file,"wb")
     file.write(magic_string)
     file.write(header)
-    file.write(array.tobytes())
+    file.write(array.data)
 
 def pack(array):
     size=len(array.shape)
-    return bytes(array.dtype.byteorder.replace('=','<' if sys.byteorder == 'little' else '>')+array.dtype.kind,'utf-8')+array.dtype.itemsize.to_bytes(1,byteorder='little')+struct.pack(f'<B{size}I',size,*array.shape)+array.tobytes()
+    return bytes(array.dtype.byteorder.replace('=','<' if sys.byteorder == 'little' else '>')+array.dtype.kind,'utf-8')+array.dtype.itemsize.to_bytes(1,byteorder='little')+struct.pack(f'<B{size}I',size,*array.shape)+array.data
 
 def load(file):
     if type(file) == str:
