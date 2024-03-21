@@ -12,8 +12,8 @@ Running fastnumpyio.py (saving and loading 100k float32 array with shape 3x64x64
 Windows 11, Python 3.9.12 x64, Numpy 1.24.0, Intel Core i7-12700K:
 ```
 numpy.save: 0:00:00.786250
-fastnumpyio.save: 0:00:00.329080
-fastnumpyio.pack: 0:00:00.262129
+fastnumpyio.save: 0:00:00.129080
+fastnumpyio.pack: 0:00:00.102129
 numpy.load: 0:00:09.689329
 fastnumpyio.load: 0:00:00.341074
 fastnumpyio.unpack: 0:00:00.208267
@@ -24,8 +24,8 @@ numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack: True
 macOS 12.5, Python 3.9.15 arm64, Numpy 1.24.0, Apple M1:
 ```
 numpy.save: 0:00:00.831839
-fastnumpyio.save: 0:00:00.389113
-fastnumpyio.pack: 0:00:00.298685
+fastnumpyio.save: 0:00:00.155620
+fastnumpyio.pack: 0:00:00.136568
 numpy.load: 0:00:07.552911
 fastnumpyio.load: 0:00:00.301430
 fastnumpyio.unpack: 0:00:00.179266
