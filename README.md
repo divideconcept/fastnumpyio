@@ -34,6 +34,7 @@ numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack: True
 ```
 
 With larger arrays (saving and loading 1k float32 array with shape 16x512x512), fastnumpyio shows the following results:
+
 macOS 12.5, Python 3.11.4 arm64, Numpy 1.24.2, Apple M1:
 ```
 numpy.save: 0:00:01.969087
