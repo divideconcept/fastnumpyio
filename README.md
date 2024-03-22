@@ -33,7 +33,18 @@ numpy.save+numpy.load == fastnumpyio.save+fastnumpyio.load: True
 numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack: True
 ```
 
-With larger arrays (3x512x512), fastnumpyio is still slightly faster for save and 2 times faster for load.
+With larger arrays (saving and loading 1k float32 array with shape 16x512x512), fastnumpyio shows the following results:
+macOS 12.5, Python 3.11.4 arm64, Numpy 1.24.2, Apple M1:
+```
+numpy.save: 0:00:01.969087
+fastnumpyio.save: 0:00:00.950796
+fastnumpyio.pack: 0:00:00.904286
+numpy.load: 0:00:01.452177
+fastnumpyio.load: 0:00:00.920938
+fastnumpyio.unpack: 0:00:00.914949
+numpy.save+numpy.load == fastnumpyio.save+fastnumpyio.load: True
+numpy.save+numpy.load == fastnumpyio.pack+fastnumpyio.unpack: True
+```
 
 When using fastnumpyio.pack/fastnumpyio.unpack the packed bytes object is formatted like this:
 ```
