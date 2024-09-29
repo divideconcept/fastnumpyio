@@ -23,7 +23,7 @@ def load(file):
     if not header:
         return None
     descr = str(header[19:25], 'utf-8').replace("'","").replace(" ","")
-    shape = tuple(int(num) for num in str(header[60:120], 'utf-8').replace(', }', '').replace('(', '').replace(')', '').split(','))
+    shape = tuple(int(num) for num in str(header[60:120], 'utf-8').replace(',)', ')').replace(', }', '').replace('(', '').replace(')', '').split(','))
     datasize = numpy.lib.format.descr_to_dtype(descr).itemsize
     for dimension in shape:
         datasize *= dimension
