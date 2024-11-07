@@ -17,17 +17,33 @@ def pack(array):
     return bytes(array.dtype.byteorder.replace('=','<' if sys.byteorder == 'little' else '>')+array.dtype.kind,'utf-8')+array.dtype.itemsize.to_bytes(1,byteorder='little')+struct.pack(f'<B{size}I',size,*array.shape)+array.data
 
 def load(file):
-    if type(file) == str:
-        file=open(file,"rb")
+    if isinstance(file, str):
+        file = open(file, "rb")
     header = file.read(128)
     if not header:
         return None
-    descr = str(header[19:25], 'utf-8').replace("'","").replace(" ","")
-    shape = tuple(int(num) for num in str(header[60:120], 'utf-8').replace(',)', ')').replace(', }', '').replace('(', '').replace(')', '').split(','))
-    datasize = numpy.lib.format.descr_to_dtype(descr).itemsize
-    for dimension in shape:
-        datasize *= dimension
-    return np.ndarray(shape, dtype=descr, buffer=file.read(datasize))
+    descr = str(header[19:25], "utf-8").replace("'", "").replace(" ", "")
+    shape = tuple(
+        int(num)
+        for num in str(header[60:120], "utf-8")
+        .replace(",)", ")")
+        .replace(", }", "")
+        .replace("(", "")
+        .replace(")", "")
+        .split(",")
+    )
+    dtype = np.lib.format.descr_to_dtype(descr)
+    arr = np.empty(shape, dtype=dtype)
+
+    # Create a writable memoryview of the array
+    memory = memoryview(arr).cast("B")  # type: ignore
+    nbytes = arr.nbytes
+
+    # Read data directly into the array's buffer
+    bytes_read = file.readinto(memory)
+    if bytes_read != nbytes:
+        raise ValueError("Could not read enough data from file.")
+    return arr
 
 def unpack(data):
     dtype = str(data[:2],'utf-8')
